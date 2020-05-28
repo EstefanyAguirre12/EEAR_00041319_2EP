@@ -56,12 +56,21 @@ namespace Solucion
 
         private void button1_Click(object sender, EventArgs e)
         {
-            AddressDAO.Agregar(idUs,textBox1.Text);
-            MessageBox.Show("¡Agregado exitosamente!", 
-                "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            textBox1.Clear();
-            actualizarDireccion();
-            actualizarDireccionPedido();
+            try
+            {
+                if (textBox1.Text == "")
+                    throw new EmptyException("Campos vacios");
+                AddressDAO.Agregar(idUs,textBox1.Text);
+                MessageBox.Show("¡Agregado exitosamente!", 
+                    "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBox1.Clear();
+                actualizarDireccion();
+                actualizarDireccionPedido();
+            }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Ingrese todos los campos solicitados", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -73,25 +82,43 @@ namespace Solucion
 
         private void button4_Click(object sender, EventArgs e)
         {
-            AddressDAO.Modificar(textBox1.Text, idaddress);
-            MessageBox.Show("¡Actualizado exitosamente!", 
-                "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            textBox1.Clear();
-            actualizarDireccion(); 
-            actualizarDireccionPedido();
+            try
+            {
+                if (textBox1.Text == "")
+                    throw new EmptyException("Campos vacios");
+                AddressDAO.Modificar(textBox1.Text, idaddress);
+                MessageBox.Show("¡Actualizado exitosamente!", 
+                    "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textBox1.Clear();
+                actualizarDireccion(); 
+                actualizarDireccionPedido();
+            }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Ingrese todos los campos solicitados", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Seguro que desea eliminar la direccion " + textBox1.Text + "?", 
-                "Hugo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            try
             {
-                AddressDAO.Eliminar(idaddress);
-                MessageBox.Show("¡Registro eliminado exitosamente!", 
-                    "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                textBox1.Clear();
-                actualizarDireccion();
-                actualizarDireccionPedido();
+                if (textBox1.Text == "")
+                    throw new EmptyException("Campos vacios");
+                if (MessageBox.Show("¿Seguro que desea eliminar la direccion " + textBox1.Text + "?", 
+                    "Hugo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    AddressDAO.Eliminar(idaddress);
+                    MessageBox.Show("¡Registro eliminado exitosamente!", 
+                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    textBox1.Clear();
+                    actualizarDireccion();
+                    actualizarDireccionPedido();
+                }
+            }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Seleccione un campo", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -109,17 +136,22 @@ namespace Solucion
 
         private void button7_Click(object sender, EventArgs e)
         {
-            if (addresspedido == 0 && idproduct == 0)
+            try
             {
-                
-            }
+                if (textBox2.Text == "" || textBox3.Text == "")
+                    throw new EmptyException("Campos vacios");
                 DateTime fecha = DateTime.Now;
                 string f = fecha.ToString("d");
                 OrderDAO.Agregar(idproduct,addresspedido,f);
                 MessageBox.Show("¡Agregado exitosamente!", 
                     "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 actualizarProductos();
-                actualizarPedidos();             
+                actualizarPedidos();
+            }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Seleccione un campo", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void button9_Click(object sender, EventArgs e)

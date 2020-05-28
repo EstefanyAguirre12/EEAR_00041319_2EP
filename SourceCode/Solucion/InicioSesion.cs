@@ -29,35 +29,42 @@ namespace Solucion
             llenarCombo();
         }
 
+        
         private void button1_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBox2.Text))
-                throw new EmptyException("Ingrese todos los campos solicitados");
-
-            if (comboBox1.SelectedValue.Equals(textBox2.Text))
+            try
             {
-                Usuario u = (Usuario) comboBox1.SelectedItem;
-                if (u.userType.Equals("True"))
+                if (textBox2.Text == "")
+                    throw new EmptyException("Campos Vacios");
+                if (comboBox1.SelectedValue.Equals(textBox2.Text))
                 {
-                    MessageBox.Show("¡Bienvenido!","Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Administrador form = new Administrador();
-                    form.Show();
-                    this.Hide();
+                    Usuario u = (Usuario) comboBox1.SelectedItem;
+                    if (u.userType.Equals("True"))
+                    {
+                        MessageBox.Show("¡Bienvenido!","Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Administrador form = new Administrador();
+                        form.Show();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        string query = $"SELECT idUser FROM APPUSER WHERE username ='{comboBox1.Text}';";
+                        var dt = Conexion.realizarConsulta(query);
+                        var dr = dt.Rows[0];
+                        int idUser = Convert.ToInt32(dr[0].ToString());
+                        MessageBox.Show("¡Bienvenido!","Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Normal form = new Normal(idUser);
+                        form.Show();
+                        this.Hide();
+                    }
                 }
                 else
-                {
-                 string query = $"SELECT idUser FROM APPUSER WHERE username ='{comboBox1.Text}';";
-                                var dt = Conexion.realizarConsulta(query);
-                                var dr = dt.Rows[0];
-                                int idUser = Convert.ToInt32(dr[0].ToString());
-                    MessageBox.Show("¡Bienvenido!","Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Normal form = new Normal(idUser);
-                    form.Show();
-                    this.Hide();
-                }
+                    MessageBox.Show("¡Contraseña incorrecta!", "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            else
-                MessageBox.Show("¡Contraseña incorrecta!", "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Ingrese todos los campos solicitados", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -70,6 +77,11 @@ namespace Solucion
         private void label2_Click(object sender, EventArgs e)
         {
             throw new System.NotImplementedException();
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

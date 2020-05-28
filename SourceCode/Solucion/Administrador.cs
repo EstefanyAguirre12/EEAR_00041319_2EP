@@ -59,46 +59,62 @@ namespace Solucion
 
         private void button13_Click(object sender, EventArgs e)
         {
-            try{
-                if (radioButton1.Checked)
-                {
-                    if (string.IsNullOrEmpty(textBox6.Text) || string.IsNullOrEmpty(textBox5.Text))
-                        throw new EmptyException("Ingrese todos los campos solicitados");
-                    UsuarioDAO.Agregar(textBox6.Text, textBox5.Text, textBox5.Text, true);
-                    MessageBox.Show("¡Agregado exitosamente!",
-                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    UsuarioDAO.Agregar(textBox6.Text, textBox5.Text, textBox5.Text, false);
-                    MessageBox.Show("¡Agregado exitosamente!",
-                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
-                textBox6.Clear();
-                textBox5.Clear();
-                textBox4.Clear();
-                actualizarUsuarios();
-            }
-            catch (Exception)
+            try
             {
-                MessageBox.Show("El usuario que ha digitado, no se encuentra disponible.", 
-                    "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }        
+                if (textBox5.Text == "" || textBox6.Text == "" )
+                    throw new EmptyException("Campos vacios");
+                try{
+                    if (radioButton1.Checked)
+                    {
+                        
+                        UsuarioDAO.Agregar(textBox6.Text, textBox5.Text, textBox5.Text, true);
+                        MessageBox.Show("¡Agregado exitosamente!",
+                            "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        UsuarioDAO.Agregar(textBox6.Text, textBox5.Text, textBox5.Text, false);
+                        MessageBox.Show("¡Agregado exitosamente!",
+                            "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    textBox6.Clear();
+                    textBox5.Clear();
+                    textBox4.Clear();
+                    actualizarUsuarios();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("El usuario que ha digitado, no se encuentra disponible.", 
+                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                } 
+            }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Ingrese todos los campos solicitados", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Seguro que desea eliminar el usuario?", 
-                "Hugo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            try{
+                if (textBox5.Text == "" || textBox6.Text == "" )
+                    throw new EmptyException("Campos vacios");
+                if (MessageBox.Show("¿Seguro que desea eliminar el usuario?", 
+                    "Hugo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    UsuarioDAO.Eliminar(idUser);
+                    MessageBox.Show("¡Registro eliminado exitosamente!", 
+                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    textBox6.Clear();
+                    textBox5.Clear();
+                    textBox4.Clear();
+                    actualizarUsuarios();
+                }
+            }
+            catch (EmptyException exception)
             {
-                UsuarioDAO.Eliminar(idUser);
-                MessageBox.Show("¡Registro eliminado exitosamente!", 
-                    "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                textBox6.Clear();
-                textBox5.Clear();
-                textBox4.Clear();
-                actualizarUsuarios();
+                MessageBox.Show("Seleccione un campo", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -139,52 +155,90 @@ namespace Solucion
         }
 
         private void button5_Click(object sender, EventArgs e)
-        {                        
-            BusinessDAO.Agregar(textBox8.Text, textBox7.Text);
-            MessageBox.Show("¡Agregado exitosamente!",
-                "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
-            textBox8.Clear();
-            textBox7.Clear();
-            llenarCombo();
-            actualizarNegocios();
-                    
-        }
-
-        private void button14_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("¿Seguro que desea eliminar el negocio?", 
-                    "Hugo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        {                   
+            try
             {
-                BusinessDAO.Eliminar(idnegocio);
-                MessageBox.Show("¡Registro eliminado exitosamente!", 
+                if (textBox8.Text == ""||textBox7.Text == "")
+                    throw new EmptyException("Campos vacios");
+                BusinessDAO.Agregar(textBox8.Text, textBox7.Text);
+                MessageBox.Show("¡Agregado exitosamente!",
                     "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
                 textBox8.Clear();
                 textBox7.Clear();
                 llenarCombo();
                 actualizarNegocios();
             }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Ingrese todos los campos solicitados", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (textBox8.Text == ""||textBox7.Text == "")
+                    throw new EmptyException("Campos vacios");
+                if (MessageBox.Show("¿Seguro que desea eliminar el negocio?", 
+                        "Hugo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    BusinessDAO.Eliminar(idnegocio);
+                    MessageBox.Show("¡Registro eliminado exitosamente!", 
+                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    textBox8.Clear();
+                    textBox7.Clear();
+                    llenarCombo();
+                    actualizarNegocios();
+                }
+            }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Seleccione un campo", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void button16_Click(object sender, EventArgs e)
         {
-            ProductDAO.Agregar(Convert.ToInt32(comboBox2.SelectedValue), textBox9.Text);
-            MessageBox.Show("¡Agregado exitosamente!",
-                "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                if (textBox9.Text == "")
+                    throw new EmptyException("Campos vacios");
             
-            textBox9.Clear();
-            actualizarProductos();
+                ProductDAO.Agregar(Convert.ToInt32(comboBox2.SelectedValue), textBox9.Text);
+                MessageBox.Show("¡Agregado exitosamente!",
+                    "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                textBox9.Clear();
+                actualizarProductos();
+            }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Ingrese todos los campos solicitados", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
         private void button18_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Seguro que desea eliminar el producto?", 
-                "Hugo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            try
             {
-                ProductDAO.Eliminar(idproducto);
-                MessageBox.Show("¡Registro eliminado exitosamente!", 
-                "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                textBox9.Clear();
-                actualizarProductos();
+                if (textBox9.Text == "")
+                    throw new EmptyException("Campos vacios");
+            
+                if (MessageBox.Show("¿Seguro que desea eliminar el producto?", 
+                    "Hugo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    ProductDAO.Eliminar(idproducto);
+                    MessageBox.Show("¡Registro eliminado exitosamente!", 
+                    "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    textBox9.Clear();
+                    actualizarProductos();
+                }
+            }
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Seleccione un campo", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 

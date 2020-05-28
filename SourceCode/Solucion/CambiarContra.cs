@@ -30,29 +30,37 @@ namespace Solucion
 
         private void button1_Click(object sender, EventArgs e)
         {
-            bool actualIgual = comboBox1.SelectedValue.Equals(textBox2.Text);
-            bool nuevaValida = textBox1.Text.Length > 0;
-           
-            if (actualIgual && nuevaValida)
+            try
             {
-                try
+                if (textBox2.Text == ""||textBox1.Text == "")
+                    throw new EmptyException("Campos vacios");
+                bool actualIgual = comboBox1.SelectedValue.Equals(textBox2.Text);
+                bool nuevaValida = textBox1.Text.Length > 0;
+               
+                if (actualIgual && nuevaValida)
                 {
-                    UsuarioDAO.ModificarContra(comboBox1.Text, textBox1.Text);
-                    MessageBox.Show("¡Contraseña actualizada exitosamente!", 
-                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
-                    
+                    try
+                    {
+                        UsuarioDAO.ModificarContra(comboBox1.Text, textBox1.Text);
+                        MessageBox.Show("¡Contraseña actualizada exitosamente!", 
+                            "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
+                        
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("¡Contraseña no actualizada! Favor intente mas tarde.", 
+                            "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-                catch (Exception)
-                {
-                    MessageBox.Show("¡Contraseña no actualizada! Favor intente mas tarde.", 
-                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                else
+                    MessageBox.Show("¡¡Favor verifique que los datos sean correctos!", 
+                        "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            else
-                MessageBox.Show("¡¡Favor verifique que los datos sean correctos!", 
-                    "Hugo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
- 
+            catch (EmptyException exception)
+            {
+                MessageBox.Show("Ingrese todos los campos solicitados", exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
